@@ -98,7 +98,7 @@ directory node[:kafka][:data_dir] do
 end
 
 # pull the remote file only if we create the directory
-tarball = "kafka-#{node[:kafka][:version]}.tar.gz"
+tarball = "kafka_#{node[:kafka][:version]}.tgz"
 download_file = "#{node[:kafka][:download_url]}/#{tarball}"
 
 remote_file "#{Chef::Config[:file_cache_path]}/#{tarball}" do
@@ -137,6 +137,8 @@ if not Chef::Config.solo
   search(:node, "role:zookeeper AND chef_environment:#{node.chef_environment}").each do |n|
     zookeeper_pairs << "#{n[:fqdn]}:#{n[:zookeeper][:client_port]}"
   end
+elsif node[:kafka][:zookeepers]
+  zookeeper_pairs = node[:kafka][:zookeepers]
 end
 
 
